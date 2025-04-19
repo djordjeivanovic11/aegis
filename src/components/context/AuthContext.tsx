@@ -5,7 +5,7 @@ import React, {
     ReactNode,
     useEffect,
 } from "react";
-import { login as loginUser } from "@/services/auth/index";
+import { login as loginUser } from "@/services/auth";
 import { setAuthToken } from "@/services/axiosInstance";
 import { TokenResponse } from "@/types/auth/types";
 

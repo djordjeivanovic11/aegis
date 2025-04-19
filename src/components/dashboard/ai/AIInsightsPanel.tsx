@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FaRegNewspaper, FaCheckCircle, FaEye } from 'react-icons/fa';
+import { FaCheckCircle, FaEye } from 'react-icons/fa';
 
 interface AIInsightsPanelProps {
     summary: string;

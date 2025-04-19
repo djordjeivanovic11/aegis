@@ -8,7 +8,7 @@ import CurrentPatientCard from '@/components/dashboard/records/CurrentPatientCar
 import VisitTimeline, { Visit } from '@/components/dashboard/records/visit/VisitTimeline';
 import VisitDetail from '@/components/dashboard/records/visit/VisitDetail';
 import VisitExtras from '@/components/dashboard/records/visit/VisitExtras';
-import ChatPanel from '@/components/dashboard/ai/insights/ChatPanel';
+import ChatPanel from '@/components/dashboard/ai/patientChat/ChatPanel';
 
 interface Patient {
     id: string;

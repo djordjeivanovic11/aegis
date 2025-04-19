@@ -2,17 +2,7 @@
 
 import React from 'react';
 
-export interface PatientInfo {
-    id: string;
-    fullName: string;
-    dob: string;
-    gender: string;
-    age: number;
-}
-
-interface PatientSummaryProps {
-    patient: PatientInfo;
-}
+import { PatientSummaryProps} from "@/types/patients/types";
 
 const PatientSummary: React.FC<PatientSummaryProps> = ({ patient }) => (
     <div className="w-full bg-card border border-default rounded-lg p-6 flex items-center justify-between shadow-sm">
