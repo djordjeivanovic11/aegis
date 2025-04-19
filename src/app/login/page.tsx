@@ -36,7 +36,7 @@ export default function LoginPage() {
 
         try {
             await login(email, password);
-            router.push('/dashboard');
+            router.push('/agenda');
         } catch (err) {
             console.error('Login error:', err);
             setError('Login failed. Please check your credentials.');

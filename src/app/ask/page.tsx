@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import ChatPanel from '@/components/dashboard/ai/patientChat/ChatPanel';
+import ChatPanel from '@/components/ui/patients/patientChat/ChatPanel';
 
 export default function JustAsk() {
     const patientId = '123e4567-e89b-12d3-a456-426614174000';
