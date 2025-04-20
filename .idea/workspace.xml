@@ -5,62 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d766ca57-622a-4503-986b-ff89aa6da819" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/public/avatar1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/avatar2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/avatar3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/avatar4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/avatar5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/agenda/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/context/PatientContext.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/ui/ai/Transcript.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/ui/controls/RecorderControls.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/ui/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/ui/patients/VisitDetails.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/ui/patients/selections/PatientSelectionCard.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/ui/patients/selections/PatientSelectionList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/types/claude/types.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/types/visit/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/ask/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/ask/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dashboard/page.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dashboard/records/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/patients/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dashboard/settings/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/settings/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/login/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/agenda/PatientCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/agenda/PatientCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/agenda/PatientList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/agenda/PatientList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/ai/AIInsightsPanel.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/ai/insights/DiagnosisInsights.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/ai/insights/PatientSummary.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/ai/PatientSummary.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/ai/insights/QuestionsSuggestions.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/ai/insights/RemindersPanel.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/ai/insights/ReportEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/ai/ReportEditor.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/ai/patientChat/ChatPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/patients/patientChat/ChatPanel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/audio/AudioVisualizer.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/audio/RecorderControls.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/audio/SessionStatusBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/controls/SessionStatusBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/layout/DashboardLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/layout/DashboardLayout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/layout/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/layout/Sidebar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/new/LabReportsInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/patients/LabReportsInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/new/NewPatientForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/patients/NewPatientForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/new/PatientCard.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/new/PatientList.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/new/SearchBar.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/records/CurrentPatientCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/patients/CurrentPatientCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/records/PatientRecordCard.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/records/RecordsList.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/records/Search.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/patients/Search.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/records/visit/VisitDetail.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/records/visit/VisitExtras.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/records/visit/VisitTimeline.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/settings/Settings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/settings/Settings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/transcript/PreviousVisitSummary.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/transcript/TranscriptFeed.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dashboard/transcript/TranscriptLine.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/Navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/Navbar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/patients/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/patients/types.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +68,8 @@
       <workItem from="1744595340810" duration="9634000" />
       <workItem from="1744946111837" duration="10485000" />
       <workItem from="1744987522818" duration="8561000" />
-      <workItem from="1745069704642" duration="14759000" />
+      <workItem from="1745069704642" duration="15292000" />
+      <workItem from="1745112740627" duration="934000" />
     </task>
     <servers />
   </component>
