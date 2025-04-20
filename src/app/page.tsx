@@ -15,7 +15,7 @@ export default function Page() {
                 </p>
 
                 <Link
-                    href="/dashboard"
+                    href="/agenda"
                     className="inline-block px-6 sm:px-8 py-3 rounded-full bg-primary text-white font-medium text-base sm:text-lg shadow hover:bg-primary/90 transition"
                 >
                     Try AEGIS Now

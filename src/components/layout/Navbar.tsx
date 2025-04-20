@@ -18,7 +18,7 @@ export default function Navbar() {
                         <div className="flex h-16 items-center justify-between">
                             {/* Logo */}
                             <div className="flex-shrink-0">
-                                <Link href="/public" className="text-2xl font-extrabold tracking-widest text-primary">
+                                <Link href="/" className="text-2xl font-extrabold tracking-widest text-primary">
                                     AEGIS
                                 </Link>
                             </div>
