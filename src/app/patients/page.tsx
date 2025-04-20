@@ -10,6 +10,7 @@ import VisitTimeline from '@/components/ui/visit/VisitTimeline';
 import VisitDetail from '@/components/ui/visit/VisitDetail';
 import VisitExtras from '@/components/ui/visit/VisitExtras';
 import CurrentVisit from '@/components/ui/visit/CurrentVisit';
+import PatientQuestions from '@/components/ui/visit/PatientQuestions';
 
 export default function RecordsPage() {
     const [selectedPatient, setSelectedPatient] = useState<PatientInfo | null>(null);
@@ -81,21 +82,22 @@ export default function RecordsPage() {
  
                     {/* 4. Past visits */}
                     {selectedVisitId !== 'current' && (
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[300px]">
                             <div className="lg:col-span-2">
                                 <VisitDetail visit={detailedVisit} />
-                         </div>
-                         <VisitExtras
-                             differential={detailedVisit.differential}
-                             nextSteps={detailedVisit.nextSteps}
-                         />
-                     </div>
+                            </div>
+                            <VisitExtras
+                                differential={detailedVisit.differential}
+                                nextSteps={detailedVisit.nextSteps}
+                            />
+                        </div>
                     )}
 
                     {/* 5. Current visits */}
                     {selectedVisitId === 'current' && (
-                        <div className="grid grid-cols-1 gap-8">
+                        <div className="flex flex-row gap-8 h-[300px]">
                             <CurrentVisit visit={detailedVisit} />
+                            <PatientQuestions />
                         </div>
                     )}
                  </div>

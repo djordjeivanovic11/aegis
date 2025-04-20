@@ -6,7 +6,7 @@ import { FaCog } from 'react-icons/fa';
 
 const navItems = [
     { name: 'Agenda', href: '/agenda' },
-    { name: 'Patients', href: '/agenda/visit' }
+    { name: 'Patients', href: '#' }
 ];
 
 const Sidebar: React.FC = () => {

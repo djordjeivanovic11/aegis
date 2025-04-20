@@ -9,7 +9,7 @@ interface VisitDetailProps {
 }
 
 const VisitDetail: React.FC<VisitDetailProps> = ({ visit }) => (
-    <div className="bg-card border border-default rounded-md p-6 space-y-6">
+    <div className="bg-card border border-default rounded-md p-6 space-y-6 h-full">
         <div className="flex justify-between items-center">
             <h3 className="text-xl font-semibold text-foreground">
                 Visit on {new Date(visit.date).toLocaleDateString()}

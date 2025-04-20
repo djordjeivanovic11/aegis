@@ -1,5 +1,5 @@
 // Checklist.tsx
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { CheckCircle, XCircle, X } from 'lucide-react'
 
 type Question = {
@@ -18,6 +18,7 @@ const Checklist: React.FC<ChecklistProps> = ({ className }) => {
     { id: 2, text: 'Any pain or discomfort?', answered: false },
   ])
   const [draft, setDraft] = useState('')
+  const listRef = useRef<HTMLDivElement>(null)
 
   const addQuestion = (text: string) => {
     if (!text.trim()) return
@@ -25,6 +26,18 @@ const Checklist: React.FC<ChecklistProps> = ({ className }) => {
       ...qs,
       { id: Date.now(), text: text.trim(), answered: false },
     ])
+    
+    if (questions.length > 2) {
+        // Scroll to bottom after adding question
+        setTimeout(() => {
+        if (listRef.current) {
+            listRef.current.scrollTo({
+            top: listRef.current.scrollHeight,
+            behavior: 'smooth',
+            })
+        }
+        }, 300)
+    }
   }
 
   const deleteQuestion = (id: number) => {
@@ -38,7 +51,7 @@ const Checklist: React.FC<ChecklistProps> = ({ className }) => {
         <input
           type="text"
           placeholder="New question for the patient…"
-          className="flex-1 p-2 border rounded"
+          className="flex-1 p-2 border rounded border-default"
           value={draft}
           onChange={e => setDraft(e.target.value)}
           onKeyDown={e => {
@@ -60,7 +73,12 @@ const Checklist: React.FC<ChecklistProps> = ({ className }) => {
       </div>
 
       {/* checklist */}
-      <div className="space-y-2 max-h-[30rem] overflow-y-auto pb-6">
+      <div ref={listRef} className="space-y-2 max-h-[160px] overflow-y-scroll pb-6">
+        {questions.length === 0 && (
+          <div className="text-center text-sm text-muted-foreground mt-3">
+            No questions have been added yet.
+          </div>
+        )}
         {questions.map(q => (
           <ChecklistItem
             key={q.id}
