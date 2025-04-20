@@ -4,7 +4,7 @@ import React from 'react';
 import ChatPanel from '@/components/ui/patients/patientChat/ChatPanel';
 
 export default function JustAsk() {
-    const patientId = '123e4567-e89b-12d3-a456-426614174000';
+    const patientId = 'bdc15d67-2237-4365-a54c-22a6b801609b';
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-white to-indigo-50 px-4">

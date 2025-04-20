@@ -3,7 +3,13 @@
 import React, { useState, useEffect, useRef, KeyboardEvent } from 'react';
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
 import { nanoid } from 'nanoid';
-import { sendPatientEducationMessage, getInitialOverview } from '@/services/chat';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
+import {
+    sendPatientEducationMessage,
+    getInitialOverview,
+} from '@/services/chat';
 
 interface Message {
     id: string;
@@ -21,17 +27,17 @@ export default function ChatPanel({ patientId }: ChatPanelProps) {
     const [loading, setLoading] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Auto-scroll on new messages
+    // Auto‑scroll on new messages
     useEffect(() => {
         scrollRef.current?.scrollTo({
             top: scrollRef.current.scrollHeight,
-            behavior: 'smooth'
+            behavior: 'smooth',
         });
     }, [messages]);
 
-    // Load initial message when component mounts
+    // Load initial overview exactly once when patientId arrives
     useEffect(() => {
-        if (patientId && messages.length === 0) {
+        if (patientId) {
             fetchInitialMessage();
         }
     }, [patientId]);
@@ -39,50 +45,52 @@ export default function ChatPanel({ patientId }: ChatPanelProps) {
     const fetchInitialMessage = async () => {
         if (!patientId) return;
         setLoading(true);
-    
         try {
-            // Replace the fetch call with the imported function
             const data = await getInitialOverview(patientId);
-            
-            if (data.content) {
-                setMessages([{ id: nanoid(), sender: 'assistant', text: data.content }]);
-            } else {
-                setMessages([{ id: nanoid(), sender: 'assistant', text: 'Hello! I can help answer questions about your treatment plan and medical care. What would you like to know?' }]);
-            }
+            const text = data.content?.trim() ||
+                "Hello! I can help answer questions about your treatment plan. What would you like to know?";
+            setMessages([{ id: nanoid(), sender: 'assistant', text }]);
         } catch (error) {
             console.error('Error fetching initial message:', error);
-            setMessages([{ id: nanoid(), sender: 'assistant', text: 'Hello! I can help answer questions about your treatment plan and medical care. What would you like to know?' }]);
+            setMessages([{
+                id: nanoid(),
+                sender: 'assistant',
+                text: "Hello! I can help answer questions about your treatment plan. What would you like to know?"
+            }]);
         } finally {
             setLoading(false);
         }
     };
 
-
     const sendMessage = async () => {
         if (!input.trim() || !patientId) return;
-        const userMsg: Message = { id: nanoid(), sender: 'user', text: input };
-        setMessages((prevMessages) => [...prevMessages, userMsg]);
+
+        // 1) Prepare the new user message
+        const userMsg: Message = { id: nanoid(), sender: 'user', text: input.trim() };
+        // 2) Optimistically append it to UI
+        setMessages((prev) => [...prev, userMsg]);
         setInput('');
         setLoading(true);
 
         try {
-            // Format the conversation history
-            const history = messages.map(msg => ({
+            // 3) Build history including this new message
+            const history = [...messages, userMsg].map((msg) => ({
                 content: msg.text,
-                isBot: msg.sender === 'assistant'
+                isBot: msg.sender === 'assistant',
             }));
 
-            // Replace the fetch call with the imported function
-            const data = await sendPatientEducationMessage(patientId, input, history);
-            
-            if (data.content) {
-                setMessages(m => [...m, { id: nanoid(), sender: 'assistant', text: data.content }]);
-            } else {
-                setMessages(m => [...m, { id: nanoid(), sender: 'assistant', text: '❗ I couldn\'t process that request.' }]);
-            }
+            // 4) Send to backend
+            const data = await sendPatientEducationMessage(patientId, userMsg.text, history);
+
+            // 5) Append the assistant’s reply
+            const reply = data.content?.trim() || "❗ I couldn't process that request.";
+            setMessages((prev) => [...prev, { id: nanoid(), sender: 'assistant', text: reply }]);
         } catch (error) {
             console.error('Error sending message:', error);
-            setMessages(m => [...m, { id: nanoid(), sender: 'assistant', text: '❗ Something went wrong.' }]);
+            setMessages((prev) => [
+                ...prev,
+                { id: nanoid(), sender: 'assistant', text: '❗ Something went wrong.' },
+            ]);
         } finally {
             setLoading(false);
         }
@@ -99,7 +107,9 @@ export default function ChatPanel({ patientId }: ChatPanelProps) {
         <div className="w-full max-w-2xl h-[600px] flex flex-col bg-white overflow-hidden rounded-xl shadow-lg">
             {/* Header */}
             <div className="flex-none bg-gradient-to-r from-indigo-600 to-purple-600 p-4">
-                <h2 className="text-white text-xl font-semibold text-center">Medical Assistant</h2>
+                <h2 className="text-white text-xl font-semibold text-center">
+                    AEGIS
+                </h2>
             </div>
 
             {/* Messages */}
@@ -107,7 +117,7 @@ export default function ChatPanel({ patientId }: ChatPanelProps) {
                 ref={scrollRef}
                 className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50"
             >
-                {messages.map(msg => {
+                {messages.map((msg) => {
                     const isUser = msg.sender === 'user';
                     return (
                         <div
@@ -116,20 +126,26 @@ export default function ChatPanel({ patientId }: ChatPanelProps) {
                         >
                             <div
                                 className={`
-                                    max-w-[75%] p-4 rounded-2xl relative
-                                    ${isUser
-                                        ? 'bg-indigo-600 text-white rounded-br-none'
-                                        : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}
-                                    shadow-md transition-transform duration-200 hover:scale-[1.02]
-                                `}
+                  max-w-[75%] p-4 rounded-2xl relative
+                  ${isUser
+                                    ? 'bg-indigo-600 text-white rounded-br-none'
+                                    : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}
+                  shadow-md transition-transform duration-200 hover:scale-[1.02]
+                `}
                             >
-                                <div className="whitespace-pre-wrap">{msg.text}</div>
+                                <div className="prose prose-sm whitespace-pre-wrap break-words">
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                        {msg.text}
+                                    </ReactMarkdown>
+                                </div>
                                 <span
                                     className={`
-                                        absolute -bottom-2 ${isUser ? 'right-4' : 'left-4'}
-                                        block w-3 h-3
-                                        ${isUser ? 'bg-indigo-600 rounded-bl-full' : 'bg-white rounded-br-full border-t border-gray-200'}
-                                    `}
+                    absolute -bottom-2 ${isUser ? 'right-4' : 'left-4'}
+                    block w-3 h-3
+                    ${isUser
+                                        ? 'bg-indigo-600 rounded-bl-full'
+                                        : 'bg-white rounded-br-full border-t border-gray-200'}
+                  `}
                                 />
                             </div>
                         </div>
@@ -169,7 +185,7 @@ export default function ChatPanel({ patientId }: ChatPanelProps) {
                 <textarea
                     className="flex-1 h-14 p-3 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     value={input}
-                    onChange={e => setInput(e.target.value)}
+                    onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKey}
                     placeholder="Ask about your treatment plan..."
                     disabled={loading}

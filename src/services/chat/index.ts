@@ -1,36 +1,51 @@
+// services/chat/index.ts
+
+import api from "@/services/axiosInstance";
+
+export interface ChatMessage {
+  isBot: boolean;     // true for assistant replies, false for user messages
+  content: string;
+}
+
+export interface PatientEducationRequest {
+  history: ChatMessage[];
+  content: string;
+}
+
+export interface PatientEducationResponse {
+  content: string;
+}
 
 /**
- * Send a message to the patient education chatbot
- * @param patientId - The ID of the patient
- * @param content - The message content to send (optional for initial message)
- * @param history - Previous conversation history
- * @returns Promise with the assistant's response
+ * Internal helper to call the backend via our Axios instance.
  */
-export async function sendPatientEducationMessage(
-    patientId: string, 
-    content?: string,
-    history: ChatMessage[] = []
-  ): Promise<ChatResponse> {
-    try {
-      const response = await api.post(
-        `/api/patient_education/${patientId}/chat`,
-        {
-          content,
-          history
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error sending message to patient education chat:", error);
-      throw error;
-    }
-  }
-  
-  /**
-   * Get initial overview message from the patient education chatbot
-   * @param patientId - The ID of the patient
-   * @returns Promise with the assistant's initial overview
-   */
-  export function getInitialOverview(patientId: string): Promise<ChatResponse> {
-    return sendPatientEducationMessage(patientId, undefined, []);
-  }
+async function callPatientEducationApi(
+    patientId: string,
+    body: PatientEducationRequest
+): Promise<PatientEducationResponse> {
+  const { data } = await api.post<PatientEducationResponse>(
+      `/patient_education/${patientId}/chat`,
+      body
+  );
+  return data;
+}
+
+/**
+ * Fetch the initial overview (no history, no content) for this patient.
+ */
+export function getInitialOverview(
+    patientId: string
+): Promise<PatientEducationResponse> {
+  return callPatientEducationApi(patientId, { history: [], content: "" });
+}
+
+/**
+ * Send a user message plus conversation history to the patient‐education API.
+ */
+export function sendPatientEducationMessage(
+    patientId: string,
+    content: string,
+    history: ChatMessage[]
+): Promise<PatientEducationResponse> {
+  return callPatientEducationApi(patientId, { history, content });
+}
