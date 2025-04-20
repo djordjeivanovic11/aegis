@@ -15,54 +15,60 @@ import FileReportsInput from '@/components/ui/patients/FileReportsInput';
 
 export default function RecordsPage() {
     const [selectedPatient, setSelectedPatient] = useState<PatientInfo | null>(null);
+
     // Dummy visits; replace with API data later
     const dummyVisits: any[] = [
         { id: 'v1', date: '2024-03-11', summary: 'Chest pain, fatigue, no fever.' },
         { id: 'v2', date: '2024-04-02', summary: 'Follow-up: symptoms improving.' },
         { id: 'v3', date: '2024-06-20', summary: 'Annual check-up, all normal.' },
-        { 
-            id: 'current', 
-            date: new Date().toISOString().split('T')[0], 
-            summary: 'Current visit in progress...' 
-        }
+        {
+            id: 'current',
+            date: new Date().toISOString().split('T')[0],
+            summary: 'Current visit in progress...',
+        },
     ];
     const [visits, setVisits] = useState<any[]>(dummyVisits);
-    // Set the default selected visit to the current visit (last in the array)
-    const [selectedVisitId, setSelectedVisitId] = useState<string>(dummyVisits[dummyVisits.length - 1].id);
-    
+    const [selectedVisitId, setSelectedVisitId] = useState<string>(
+        dummyVisits[dummyVisits.length - 1].id
+    );
+
     const handleSearch = (params: SearchParams) => {
         console.log('Search params:', params);
     };
 
     const selectedVisit = visits.find((v) => v.id === selectedVisitId);
     const detailedVisit = selectedVisit && {
-         ...selectedVisit,
-         takeaways: selectedVisit.id === 'current' 
-            ? ['Initial assessment pending', 'Gathering patient history', 'Review previous records']
-            : ['Rule out cardiac cause', 'Order ECG', 'Check CBC'],
-         differential: selectedVisit.id === 'current'
-            ? ['Assessment in progress']
-            : ['Angina', 'GERD', 'Musculoskeletal pain'],
-         nextSteps: selectedVisit.id === 'current'
-            ? ['Complete initial assessment', 'Document current symptoms', 'Review medical history']
-            : ['Schedule ECG', 'Start PPI trial', 'Follow up in 1 week'],
-         pdfUrl: '/dummy.pdf',
-     };
+        ...selectedVisit,
+        takeaways:
+            selectedVisit.id === 'current'
+                ? ['Initial assessment pending', 'Gathering patient history', 'Review previous records']
+                : ['Rule out cardiac cause', 'Order ECG', 'Check CBC'],
+        differential:
+            selectedVisit.id === 'current'
+                ? ['Assessment in progress']
+                : ['Angina', 'GERD', 'Musculoskeletal pain'],
+        nextSteps:
+            selectedVisit.id === 'current'
+                ? ['Complete initial assessment', 'Document current symptoms', 'Review medical history']
+                : ['Schedule ECG', 'Start PPI trial', 'Follow up in 1 week'],
+        pdfUrl: '/dummy.pdf',
+    };
 
     const [files, setFiles] = useState<File[]>([]);
     const [links, setLinks] = useState<string[]>([]);
-    
+
+    // (You can remove this if you don't need a combined handler)
     const handleFilesChange = (newFiles: File[], newLinks: string[]) => {
         setFiles(newFiles);
         setLinks(newLinks);
     };
-    
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
             const patientId = params.get('id');
             if (patientId) {
-                const patient = dummyPatients.find(p => p.id === patientId);
+                const patient = dummyPatients.find((p) => p.id === patientId);
                 if (patient) {
                     setSelectedPatient(patient);
                 }
@@ -70,10 +76,13 @@ export default function RecordsPage() {
         }
     }, []);
 
+    // Hard‑coded patient UUID you provided
+    const HARD_CODED_PATIENT_ID = 'bdc15d67-2237-4365-a54c-22a6b801609b';
+
     return (
         <DashboardLayout pageTitle="Patients">
             <SearchBar onSearch={handleSearch} />
-            
+
             {/* 3. Patient overview */}
             {selectedPatient && (
                 <div className="mt-6">
@@ -84,40 +93,40 @@ export default function RecordsPage() {
             {/* 4. Patient files */}
             {selectedPatient && (
                 <div className="mt-6">
-                    <FileReportsInput files={files} links={links} setFiles={setFiles} setLinks={setLinks} />
+                    <FileReportsInput
+                        patientId={HARD_CODED_PATIENT_ID}
+                        docType="LAB_REPORT"
+                        files={files}
+                        links={links}
+                        setFiles={setFiles}
+                        setLinks={setLinks}
+                    />
                 </div>
             )}
 
             {selectedPatient && detailedVisit && (
-                 <div className="mt-6 space-y-6">
-                     <VisitTimeline
-                         visits={visits}
-                         selectedId={selectedVisitId}
-                         onSelect={setSelectedVisitId}
-                     />
- 
+                <div className="mt-6 space-y-6">
+                    <VisitTimeline visits={visits} selectedId={selectedVisitId} onSelect={setSelectedVisitId} />
+
                     {/* 5. Past visits */}
                     {selectedVisitId !== 'current' && (
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[300px]">
                             <div className="lg:col-span-2">
                                 <VisitDetail visit={detailedVisit} />
                             </div>
-                            <VisitExtras
-                                differential={detailedVisit.differential}
-                                nextSteps={detailedVisit.nextSteps}
-                            />
+                            <VisitExtras differential={detailedVisit.differential} nextSteps={detailedVisit.nextSteps} />
                         </div>
                     )}
 
-                    {/* 6. Current visits */}
+                    {/* 6. Current visit */}
                     {selectedVisitId === 'current' && (
                         <div className="flex flex-row gap-8 h-[300px]">
                             <CurrentVisit visit={detailedVisit} />
                             <PatientQuestions />
                         </div>
                     )}
-                 </div>
-             )}
+                </div>
+            )}
         </DashboardLayout>
     );
 }
