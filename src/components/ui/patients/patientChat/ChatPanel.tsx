@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, KeyboardEvent } from 'react';
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
 import { nanoid } from 'nanoid';
+import { sendPatientEducationMessage, getInitialOverview } from '@/services/chat';
 
 interface Message {
     id: string;
@@ -20,13 +21,42 @@ export default function ChatPanel({ patientId }: ChatPanelProps) {
     const [loading, setLoading] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Auto‑scroll on new messages
+    // Auto-scroll on new messages
     useEffect(() => {
         scrollRef.current?.scrollTo({
             top: scrollRef.current.scrollHeight,
             behavior: 'smooth'
         });
     }, [messages]);
+
+    // Load initial message when component mounts
+    useEffect(() => {
+        if (patientId && messages.length === 0) {
+            fetchInitialMessage();
+        }
+    }, [patientId]);
+
+    const fetchInitialMessage = async () => {
+        if (!patientId) return;
+        setLoading(true);
+    
+        try {
+            // Replace the fetch call with the imported function
+            const data = await getInitialOverview(patientId);
+            
+            if (data.content) {
+                setMessages([{ id: nanoid(), sender: 'assistant', text: data.content }]);
+            } else {
+                setMessages([{ id: nanoid(), sender: 'assistant', text: 'Hello! I can help answer questions about your treatment plan and medical care. What would you like to know?' }]);
+            }
+        } catch (error) {
+            console.error('Error fetching initial message:', error);
+            setMessages([{ id: nanoid(), sender: 'assistant', text: 'Hello! I can help answer questions about your treatment plan and medical care. What would you like to know?' }]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     const sendMessage = async () => {
         if (!input.trim() || !patientId) return;
@@ -36,14 +66,22 @@ export default function ChatPanel({ patientId }: ChatPanelProps) {
         setLoading(true);
 
         try {
-            const res = await fetch('/api/insights/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question: input, patientId })
-            });
-            const { answer } = await res.json();
-            setMessages(m => [...m, { id: nanoid(), sender: 'assistant', text: answer }]);
-        } catch {
+            // Format the conversation history
+            const history = messages.map(msg => ({
+                content: msg.text,
+                isBot: msg.sender === 'assistant'
+            }));
+
+            // Replace the fetch call with the imported function
+            const data = await sendPatientEducationMessage(patientId, input, history);
+            
+            if (data.content) {
+                setMessages(m => [...m, { id: nanoid(), sender: 'assistant', text: data.content }]);
+            } else {
+                setMessages(m => [...m, { id: nanoid(), sender: 'assistant', text: '❗ I couldn\'t process that request.' }]);
+            }
+        } catch (error) {
+            console.error('Error sending message:', error);
             setMessages(m => [...m, { id: nanoid(), sender: 'assistant', text: '❗ Something went wrong.' }]);
         } finally {
             setLoading(false);
@@ -58,10 +96,10 @@ export default function ChatPanel({ patientId }: ChatPanelProps) {
     };
 
     return (
-        <div className="w-full h-screen flex flex-col bg-white overflow-hidden">
+        <div className="w-full max-w-2xl h-[600px] flex flex-col bg-white overflow-hidden rounded-xl shadow-lg">
             {/* Header */}
             <div className="flex-none bg-gradient-to-r from-indigo-600 to-purple-600 p-4">
-                <h2 className="text-white text-2xl font-semibold text-center">Just Ask</h2>
+                <h2 className="text-white text-xl font-semibold text-center">Medical Assistant</h2>
             </div>
 
             {/* Messages */}
@@ -78,20 +116,20 @@ export default function ChatPanel({ patientId }: ChatPanelProps) {
                         >
                             <div
                                 className={`
-                  max-w-[75%] p-4 rounded-2xl relative
-                  ${isUser
-                                    ? 'bg-indigo-600 text-white rounded-br-none'
-                                    : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}
-                  shadow-md transition-transform duration-200 hover:scale-[1.02]
-                `}
+                                    max-w-[75%] p-4 rounded-2xl relative
+                                    ${isUser
+                                        ? 'bg-indigo-600 text-white rounded-br-none'
+                                        : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'}
+                                    shadow-md transition-transform duration-200 hover:scale-[1.02]
+                                `}
                             >
-                                {msg.text}
+                                <div className="whitespace-pre-wrap">{msg.text}</div>
                                 <span
                                     className={`
-                    absolute -bottom-2 ${isUser ? 'right-4' : 'left-4'}
-                    block w-3 h-3
-                    ${isUser ? 'bg-indigo-600 rounded-bl-full' : 'bg-white rounded-br-full border-t border-gray-200'}
-                  `}
+                                        absolute -bottom-2 ${isUser ? 'right-4' : 'left-4'}
+                                        block w-3 h-3
+                                        ${isUser ? 'bg-indigo-600 rounded-bl-full' : 'bg-white rounded-br-full border-t border-gray-200'}
+                                    `}
                                 />
                             </div>
                         </div>
@@ -128,17 +166,17 @@ export default function ChatPanel({ patientId }: ChatPanelProps) {
 
             {/* Input */}
             <div className="flex-none p-4 bg-white border-t border-gray-200 flex items-end gap-3">
-        <textarea
-            className="flex-1 h-14 p-3 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={handleKey}
-            placeholder={patientId ? 'Type your question…' : 'Select a patient first…'}
-            disabled={!patientId}
-        />
+                <textarea
+                    className="flex-1 h-14 p-3 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                    value={input}
+                    onChange={e => setInput(e.target.value)}
+                    onKeyDown={handleKey}
+                    placeholder="Ask about your treatment plan..."
+                    disabled={loading}
+                />
                 <button
                     onClick={sendMessage}
-                    disabled={loading || !patientId}
+                    disabled={loading || !input.trim()}
                     className="p-3 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-50 rounded-full transition-shadow shadow-md"
                     aria-label="Send message"
                 >
