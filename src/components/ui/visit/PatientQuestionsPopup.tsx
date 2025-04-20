@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { FaQuestionCircle } from 'react-icons/fa';
 import { X } from 'lucide-react';
-import Checklist from '../checklist/Checklist';
+import PatientQuestions from './PatientQuestions';
+import CurrentVisit from './CurrentVisit';
 import { Question } from './PatientQuestions';
 
 interface PatientQuestionsPopupProps {
@@ -19,15 +19,13 @@ const PatientQuestionsPopup: React.FC<PatientQuestionsPopupProps> = ({
     onAddQuestion,
     onDeleteQuestion,
     onToggleAnswer,
-    onClose 
+    onClose
 }) => {
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-card border border-default rounded-md p-4 shadow-lg w-full max-w-2xl">
-                <div className="flex justify-between items-center mb-4">
-                    <h4 className="flex items-center gap-2 text-lg font-semibold text-primary">
-                        <FaQuestionCircle /> Patient Questions
-                    </h4>
+            <div className="bg-card border border-default rounded-md p-6 shadow-lg w-[90vw] max-w-7xl">
+                {/* Header with close button */}
+                <div className="flex justify-end mb-4">
                     <button
                         onClick={onClose}
                         className="text-muted hover:text-foreground transition"
@@ -35,12 +33,18 @@ const PatientQuestionsPopup: React.FC<PatientQuestionsPopupProps> = ({
                         <X className="h-5 w-5" />
                     </button>
                 </div>
-                <Checklist 
-                    questions={questions}
-                    onAddQuestion={onAddQuestion}
-                    onDeleteQuestion={onDeleteQuestion}
-                    onToggleAnswer={onToggleAnswer}
-                />
+                
+                {/* Content area with same layout as main view */}
+                <div className="flex flex-row gap-8 h-[80vh]">
+                    <CurrentVisit />
+                    <PatientQuestions 
+                        questions={questions}
+                        onAddQuestion={onAddQuestion}
+                        onDeleteQuestion={onDeleteQuestion}
+                        onToggleAnswer={onToggleAnswer}
+                        showPopupButton={false} // Hide the popup button in the popup view
+                    />
+                </div>
             </div>
         </div>
     );

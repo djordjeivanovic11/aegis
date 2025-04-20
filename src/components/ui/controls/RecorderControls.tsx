@@ -1,110 +1,97 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { FaPlay, FaStop } from 'react-icons/fa';
+import { useVisit } from '@/components/context/VisitContext';
 
 export default function SessionControls() {
-    const [sessionStatus, setSessionStatus] = useState<'idle' | 'recording' | 'processing' | 'completed'>('idle');
+  const { isRecording, setIsRecording, sessionStatus, setSessionStatus } = useVisit();
 
-    // Simulated backend AI response (e.g. from Claude or RAG)
-    const [summary, setSummary] = useState('');
-    const [takeaways, setTakeaways] = useState<string[]>([]);
+  const handleStartRecording = () => {
+    setIsRecording(true);
+    setSessionStatus('recording');
+    // …any additional start‑recording logic here
+  };
 
-    const patient = {
-        name: 'John Harvard',
-        dob: '1970-01-01',
-        gender: 'Male',
-        patientId: 'cb3205c9-5459-4b88-b2e5-6ed85bb6fbbd',
-        email: 'john.harvard@example.com',
-    };
+  const handleStopRecording = () => {
+    setIsRecording(false);
+    setSessionStatus('processing');
+    // …any additional stop‑recording logic here
 
-    const [isRecording, setIsRecording] = useState(false);
-    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-    const wsRef = useRef<WebSocket | null>(null);
+    // simulate "done processing" after 2s
+    setTimeout(() => {
+      setSessionStatus('completed');
+    }, 2000);
+  };
 
-    const startRecording = async () => {
-        setIsRecording(true);
-        setSessionStatus('recording');
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const ws = new WebSocket('ws://localhost:8000/ws/transcribe/'+patient.patientId); // Change if needed
-        wsRef.current = ws;
-
-        ws.onopen = () => {
-            console.log("WebSocket connected");
-            const mediaRecorder = new MediaRecorder(stream);
-            mediaRecorderRef.current = mediaRecorder;
-            mediaRecorder.start(1000); // Send data every 250ms
-
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0 && ws.readyState === WebSocket.OPEN) {
-                    console.log("data: ", event.data);
-                ws.send(event.data);
-                }
-            };
-
-            mediaRecorder.onstop = () => {
-                stream.getTracks().forEach(track => track.stop());
-            };
-        };
-
-        ws.onerror = (e) => { 
-            console.error("WebSocket error:", e);
-            setIsRecording(false);
-            setSessionStatus('completed');
-        };
-    };
-
-    const stopRecording = () => {
-        setIsRecording(false);
-        setSessionStatus('processing');
-        console.log("Session ended.");
-        mediaRecorderRef.current?.stop();
-        wsRef.current?.close();
-    };
-
-    // Simulate Claude response
-    useEffect(() => {
-        // TODO: Replace this with real Claude API call or websocket
-        setTimeout(() => {
-            setSummary(
-                'Patient reports chest pain and fatigue over the last 3 days. No fever or cough. Symptoms worsen with exertion.'
-            );
-            setTakeaways([
-                'Ask about previous cardiac history.',
-                'Order ECG and basic labs (CBC, troponin).',
-                'Rule out anxiety and GERD.',
-            ]);
-            setSessionStatus('completed');
-        }, 1000);
-    }, []);
-
-    return (
-        <div className="flex flex-col items-center justify-center space-y-4 p-6">
-            {/* Status */}
-            <p className="text-sm text-gray-600">
-                {isRecording ? `Currently Recording...` : 'No Active Session'}
+  // Status display based on sessionStatus with consistent height
+  const renderStatusDisplay = () => {
+    // Common height container for all status messages
+    const baseContainerClass = "min-h-[52px] w-full flex items-center justify-center";
+    
+    switch(sessionStatus) {
+      case 'recording':
+        return (
+          <div className={`${baseContainerClass}`}>
+            <p className="text-sm text-red-500 animate-pulse">
+              Currently Recording...
             </p>
+          </div>
+        );
+      case 'processing':
+        return (
+          <div className={`${baseContainerClass} p-3 bg-blue-50 border border-blue-200 rounded-md`}>
+            <p className="text-sm text-blue-800">Processing recording...</p>
+          </div>
+        );
+      case 'completed':
+        return (
+          <div className={`${baseContainerClass} p-3 bg-green-50 border border-green-200 rounded-md`}>
+            <p className="text-sm text-green-800">Recording completed and processed successfully!</p>
+          </div>
+        );
+      case 'error':
+        return (
+          <div className={`${baseContainerClass} p-3 bg-red-50 border border-red-200 rounded-md`}>
+            <p className="text-sm text-red-800">Error processing recording</p>
+          </div>
+        );
+      default:
+        return (
+          <div className={`${baseContainerClass}`}>
+            <p className="text-sm text-gray-600">
+              No Active Session
+            </p>
+          </div>
+        );
+    }
+  };
 
-            {/* Controls */}
-            <div className="flex space-x-4">
-                <button
-                    onClick={startRecording}
-                    disabled={isRecording}
-                    className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                    <FaPlay className="w-5 h-5" />
-                    <span>Start Session</span>
-                </button>
+  return (
+    <div className="flex flex-col items-center justify-center space-y-4 p-6">
+      {/* Status */}
+      {renderStatusDisplay()}
 
-                <button
-                    onClick={stopRecording}
-                    disabled={!isRecording}
-                    className="flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                    <FaStop className="w-5 h-5" />
-                    <span>End Session</span>
-                </button>
-            </div>
-        </div>
-    );
+      {/* Controls */}
+      <div className="flex space-x-4">
+        <button
+          onClick={handleStartRecording}
+          disabled={isRecording || sessionStatus === 'processing'}
+          className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        >
+          <FaPlay className="w-5 h-5" />
+          <span>Start Session</span>
+        </button>
+
+        <button
+          onClick={handleStopRecording}
+          disabled={!isRecording}
+          className="flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        >
+          <FaStop className="w-5 h-5" />
+          <span>End Session</span>
+        </button>
+      </div>
+    </div>
+  );
 }

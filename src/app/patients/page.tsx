@@ -10,8 +10,9 @@ import VisitTimeline from '@/components/ui/visit/VisitTimeline';
 import VisitDetail from '@/components/ui/visit/VisitDetail';
 import VisitExtras from '@/components/ui/visit/VisitExtras';
 import CurrentVisit from '@/components/ui/visit/CurrentVisit';
-import PatientQuestions from '@/components/ui/visit/PatientQuestions';
 import FileReportsInput from '@/components/ui/patients/FileReportsInput';
+import PatientQuestionsContainer from '@/components/ui/visit/PatientQuestionsContainer';
+import { VisitProvider } from '@/components/context/VisitContext';
 
 export default function RecordsPage() {
     const [selectedPatient, setSelectedPatient] = useState<PatientInfo | null>(null);
@@ -57,12 +58,6 @@ export default function RecordsPage() {
     const [files, setFiles] = useState<File[]>([]);
     const [links, setLinks] = useState<string[]>([]);
 
-    // (You can remove this if you don't need a combined handler)
-    const handleFilesChange = (newFiles: File[], newLinks: string[]) => {
-        setFiles(newFiles);
-        setLinks(newLinks);
-    };
-
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
@@ -76,7 +71,7 @@ export default function RecordsPage() {
         }
     }, []);
 
-    // Hard‑coded patient UUID you provided
+    // Hard‑coded patient UUID
     const HARD_CODED_PATIENT_ID = 'bdc15d67-2237-4365-a54c-22a6b801609b';
 
     return (
@@ -120,10 +115,12 @@ export default function RecordsPage() {
 
                     {/* 6. Current visit */}
                     {selectedVisitId === 'current' && (
-                        <div className="flex flex-row gap-8 h-[300px]">
-                            <CurrentVisit visit={detailedVisit} />
-                            <PatientQuestions />
-                        </div>
+                        <VisitProvider initialVisit={detailedVisit}>
+                            <div className="flex flex-row gap-8 h-[300px]">
+                                <CurrentVisit />
+                                <PatientQuestionsContainer />
+                            </div>
+                        </VisitProvider>
                     )}
                 </div>
             )}
