@@ -50,7 +50,6 @@ export default function SessionControls() {
         ws.onerror = (e) => console.error("WebSocket error:", e);
         
         setSessionStatus('recording');
-        setSessionId(patient.patientId);
     };
 
     const stopRecording = () => {
@@ -60,7 +59,6 @@ export default function SessionControls() {
         setIsRecording(false);
         
         setSessionStatus('completed');
-        setSessionId(null);
     };
 
     // Simulate Claude response
@@ -78,13 +76,11 @@ export default function SessionControls() {
         }, 1000);
     }, []);
 
-    const [sessionId, setSessionId] = useState<string | null>(null);
-
     return (
         <div className="flex flex-col items-center justify-center space-y-4 p-6">
             {/* Status */}
             <p className="text-sm text-gray-600">
-                {isRecording ? `Session Active: ${sessionId}` : 'No Active Session'}
+                {isRecording ? `Currently Recording...` : 'No Active Session'}
             </p>
 
             {/* Controls */}

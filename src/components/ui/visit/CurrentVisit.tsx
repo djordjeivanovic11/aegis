@@ -15,7 +15,7 @@ const CurrentVisit: React.FC<CurrentVisitProps> = ({ visit }) => (
         </h3>
         <div className="relative">
             <div className="float-left mr-4 w-[410px] mt-2">
-                <h4 className="text-lg font-semibold text-primary mb-2 text-center">Start recording conversation</h4>
+                <h4 className="text-lg font-semibold text-primary mb-2 text-center">Record Patient Conversation</h4>
                 <SessionControls />
             </div>
         </div>
