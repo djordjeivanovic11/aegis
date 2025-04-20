@@ -19,6 +19,7 @@ interface PatientQuestionsProps {
     onToggleAnswer: (id: number) => void;
     onOpenPopup?: () => void;
     showPopupButton?: boolean;
+    maxHeight?: string; // Add maxHeight prop
 }
 
 const PatientQuestions: React.FC<PatientQuestionsProps> = ({
@@ -28,6 +29,7 @@ const PatientQuestions: React.FC<PatientQuestionsProps> = ({
     onToggleAnswer,
     onOpenPopup,
     showPopupButton = true, // Default to showing the popup button
+    maxHeight, // Default to undefined to use Checklist's default
 }) => {
     return (
         <section className="bg-card border border-default rounded-md p-4 shadow-sm h-full flex-1">
@@ -50,6 +52,7 @@ const PatientQuestions: React.FC<PatientQuestionsProps> = ({
                 onAddQuestion={onAddQuestion}
                 onDeleteQuestion={onDeleteQuestion}
                 onToggleAnswer={onToggleAnswer}
+                maxHeight={maxHeight}
             />
         </section>
     );

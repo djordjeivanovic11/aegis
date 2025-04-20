@@ -11,9 +11,16 @@ interface ChecklistProps {
   onAddQuestion: (text: string) => void
   onDeleteQuestion: (id: number) => void
   onToggleAnswer: (id: number) => void
+  maxHeight?: string // New prop for customizable height
 }
 
-const Checklist: React.FC<ChecklistProps> = ({ questions, onAddQuestion, onDeleteQuestion, onToggleAnswer }) => {
+const Checklist: React.FC<ChecklistProps> = ({ 
+  questions, 
+  onAddQuestion, 
+  onDeleteQuestion, 
+  onToggleAnswer,
+  maxHeight = "160px" // Default to the original height
+}) => {
   const [draft, setDraft] = useState('')
   const listRef = useRef<HTMLDivElement>(null)
   const { isRecording } = useVisit()
@@ -63,7 +70,11 @@ const Checklist: React.FC<ChecklistProps> = ({ questions, onAddQuestion, onDelet
       </div>
 
       {/* checklist */}
-      <div ref={listRef} className="space-y-2 max-h-[160px] overflow-y-scroll pb-6">
+      <div 
+        ref={listRef} 
+        className="space-y-2 overflow-y-scroll pb-6"
+        style={{ maxHeight }} // Use the prop for dynamic height
+      >
         {questions.length === 0 && (
           <div className="text-center text-sm text-muted-foreground mt-3">
             No questions have been added yet.

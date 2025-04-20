@@ -42,7 +42,8 @@ const PatientQuestionsPopup: React.FC<PatientQuestionsPopupProps> = ({
                         onAddQuestion={onAddQuestion}
                         onDeleteQuestion={onDeleteQuestion}
                         onToggleAnswer={onToggleAnswer}
-                        showPopupButton={false} // Hide the popup button in the popup view
+                        showPopupButton={false}
+                        maxHeight="60vh"
                     />
                 </div>
             </div>
