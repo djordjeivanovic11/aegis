@@ -202,6 +202,14 @@ const LabReportsInput: React.FC<LabReportsInputProps> = ({
                   type="text"
                   value={linkInput}
                   onChange={e => setLinkInput(e.target.value)}
+                  onKeyDown={e => {
+                      if (e.key === 'Enter') {
+                          e.preventDefault();
+                          if (linkInput.trim()) {
+                              addLink();
+                          }
+                      }
+                  }}
                   placeholder="Resource for the patient..."
                   className="flex-1 border border-default rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
               />
