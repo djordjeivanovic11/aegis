@@ -51,7 +51,7 @@ const PatientQuestions: React.FC<PatientQuestionsProps> = () => {
                     </h4>
                     <button
                         onClick={() => setIsPopupOpen(true)}
-                        className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition"
+                        className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition cursor-pointer"
                     >
                         <ExternalLink className="h-5 w-5" />
                         Open in popup

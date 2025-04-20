@@ -27,7 +27,7 @@ const VisitTimeline: React.FC<VisitTimelineProps> = ({
                 <button
                     key={v.id}
                     onClick={() => onSelect(v.id)}
-                    className={`inline-flex items-center gap-2 px-4 py-2 mr-3 mb-1 rounded-full text-sm font-medium transition ${
+                    className={`inline-flex items-center gap-2 px-4 py-2 mr-3 mb-1 rounded-full text-sm font-medium transition cursor-pointer ${
                         isActive
                             ? 'bg-primary text-white shadow'
                             : 'bg-muted/10 text-foreground hover:bg-muted/20'

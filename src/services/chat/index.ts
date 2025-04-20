@@ -1,3 +1,5 @@
+import api from "../axiosInstance";
+import { ChatMessage, ChatResponse } from "@/types/chat/types";
 
 /**
  * Send a message to the patient education chatbot
@@ -10,27 +12,27 @@ export async function sendPatientEducationMessage(
     patientId: string, 
     content?: string,
     history: ChatMessage[] = []
-  ): Promise<ChatResponse> {
+): Promise<ChatResponse> {
     try {
-      const response = await api.post(
-        `/api/patient_education/${patientId}/chat`,
-        {
-          content,
-          history
-        }
-      );
-      return response.data;
+        const response = await api.post<ChatResponse>(
+            `/api/patient_education/${patientId}/chat`,
+            {
+                content,
+                history
+            }
+        );
+        return response.data;
     } catch (error) {
-      console.error("Error sending message to patient education chat:", error);
-      throw error;
+        console.error("Error sending message to patient education chat:", error);
+        throw error;
     }
-  }
-  
-  /**
-   * Get initial overview message from the patient education chatbot
-   * @param patientId - The ID of the patient
-   * @returns Promise with the assistant's initial overview
-   */
-  export function getInitialOverview(patientId: string): Promise<ChatResponse> {
+}
+
+/**
+ * Get initial overview message from the patient education chatbot
+ * @param patientId - The ID of the patient
+ * @returns Promise with the assistant's initial overview
+ */
+export function getInitialOverview(patientId: string): Promise<ChatResponse> {
     return sendPatientEducationMessage(patientId, undefined, []);
-  }
+}

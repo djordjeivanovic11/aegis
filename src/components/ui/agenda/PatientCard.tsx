@@ -86,7 +86,7 @@ export default function PatientCard({ patient }: PatientCardProps) {
                 <div className="flex justify-end">
                     <button
                         onClick={handleStartVisit}
-                        className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-md transition"
+                        className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-md transition cursor-pointer"
                     >
                         Start Visit
                     </button>

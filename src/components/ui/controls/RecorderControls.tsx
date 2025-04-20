@@ -23,42 +23,43 @@ export default function SessionControls() {
     const wsRef = useRef<WebSocket | null>(null);
 
     const startRecording = async () => {
+        setIsRecording(true);
+        setSessionStatus('recording');
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         const ws = new WebSocket('ws://localhost:8000/ws/transcribe/'+patient.patientId); // Change if needed
         wsRef.current = ws;
 
         ws.onopen = () => {
-        console.log("WebSocket connected");
-        const mediaRecorder = new MediaRecorder(stream);
-        mediaRecorderRef.current = mediaRecorder;
-        mediaRecorder.start(1000); // Send data every 250ms
+            console.log("WebSocket connected");
+            const mediaRecorder = new MediaRecorder(stream);
+            mediaRecorderRef.current = mediaRecorder;
+            mediaRecorder.start(1000); // Send data every 250ms
 
-        mediaRecorder.ondataavailable = (event) => {
-            if (event.data.size > 0 && ws.readyState === WebSocket.OPEN) {
-                console.log("data: ", event.data);
-            ws.send(event.data);
-            }
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0 && ws.readyState === WebSocket.OPEN) {
+                    console.log("data: ", event.data);
+                ws.send(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+                stream.getTracks().forEach(track => track.stop());
+            };
         };
 
-        mediaRecorder.onstop = () => {
-            stream.getTracks().forEach(track => track.stop());
+        ws.onerror = (e) => { 
+            console.error("WebSocket error:", e);
+            setIsRecording(false);
+            setSessionStatus('completed');
         };
-
-        setIsRecording(true);
-        };
-
-        ws.onerror = (e) => console.error("WebSocket error:", e);
-        
-        setSessionStatus('recording');
     };
 
     const stopRecording = () => {
+        setIsRecording(false);
+        setSessionStatus('processing');
         console.log("Session ended.");
         mediaRecorderRef.current?.stop();
         wsRef.current?.close();
-        setIsRecording(false);
-        
-        setSessionStatus('completed');
     };
 
     // Simulate Claude response
@@ -73,6 +74,7 @@ export default function SessionControls() {
                 'Order ECG and basic labs (CBC, troponin).',
                 'Rule out anxiety and GERD.',
             ]);
+            setSessionStatus('completed');
         }, 1000);
     }, []);
 
@@ -88,7 +90,7 @@ export default function SessionControls() {
                 <button
                     onClick={startRecording}
                     disabled={isRecording}
-                    className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                     <FaPlay className="w-5 h-5" />
                     <span>Start Session</span>
@@ -97,7 +99,7 @@ export default function SessionControls() {
                 <button
                     onClick={stopRecording}
                     disabled={!isRecording}
-                    className="flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                     <FaStop className="w-5 h-5" />
                     <span>End Session</span>
