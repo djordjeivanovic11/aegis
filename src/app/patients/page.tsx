@@ -11,6 +11,7 @@ import VisitDetail from '@/components/ui/visit/VisitDetail';
 import VisitExtras from '@/components/ui/visit/VisitExtras';
 import CurrentVisit from '@/components/ui/visit/CurrentVisit';
 import PatientQuestions from '@/components/ui/visit/PatientQuestions';
+import FileReportsInput from '@/components/ui/patients/FileReportsInput';
 
 export default function RecordsPage() {
     const [selectedPatient, setSelectedPatient] = useState<PatientInfo | null>(null);
@@ -47,6 +48,14 @@ export default function RecordsPage() {
             : ['Schedule ECG', 'Start PPI trial', 'Follow up in 1 week'],
          pdfUrl: '/dummy.pdf',
      };
+
+    const [files, setFiles] = useState<File[]>([]);
+    const [links, setLinks] = useState<string[]>([]);
+    
+    const handleFilesChange = (newFiles: File[], newLinks: string[]) => {
+        setFiles(newFiles);
+        setLinks(newLinks);
+    };
     
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -67,20 +76,27 @@ export default function RecordsPage() {
             
             {/* 3. Patient overview */}
             {selectedPatient && (
-                <div className="mt-8">
+                <div className="mt-6">
                     <CurrentPatientCard patient={selectedPatient} />
                 </div>
             )}
 
+            {/* 4. Patient files */}
+            {selectedPatient && (
+                <div className="mt-6">
+                    <FileReportsInput files={files} links={links} setFiles={setFiles} setLinks={setLinks} />
+                </div>
+            )}
+
             {selectedPatient && detailedVisit && (
-                 <div className="mt-8 space-y-8">
+                 <div className="mt-6 space-y-6">
                      <VisitTimeline
                          visits={visits}
                          selectedId={selectedVisitId}
                          onSelect={setSelectedVisitId}
                      />
  
-                    {/* 4. Past visits */}
+                    {/* 5. Past visits */}
                     {selectedVisitId !== 'current' && (
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[300px]">
                             <div className="lg:col-span-2">
@@ -93,7 +109,7 @@ export default function RecordsPage() {
                         </div>
                     )}
 
-                    {/* 5. Current visits */}
+                    {/* 6. Current visits */}
                     {selectedVisitId === 'current' && (
                         <div className="flex flex-row gap-8 h-[300px]">
                             <CurrentVisit visit={detailedVisit} />

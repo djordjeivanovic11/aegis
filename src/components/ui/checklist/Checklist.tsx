@@ -1,72 +1,58 @@
 // Checklist.tsx
+'use client';
+
 import React, { useState, useRef } from 'react'
 import { CheckCircle, XCircle, X } from 'lucide-react'
-
-type Question = {
-  id: number
-  text: string
-  answered: boolean
-}
+import { Question } from '../visit/PatientQuestions'
 
 interface ChecklistProps {
-  className?: string
+  questions: Question[]
+  onAddQuestion: (text: string) => void
+  onDeleteQuestion: (id: number) => void
+  onToggleAnswer: (id: number) => void
 }
 
-const Checklist: React.FC<ChecklistProps> = ({ className }) => {
-  const [questions, setQuestions] = useState<Question[]>([
-    { id: 1, text: 'How are you feeling today?', answered: false },
-    { id: 2, text: 'Any pain or discomfort?', answered: false },
-  ])
+const Checklist: React.FC<ChecklistProps> = ({ questions, onAddQuestion, onDeleteQuestion, onToggleAnswer }) => {
   const [draft, setDraft] = useState('')
   const listRef = useRef<HTMLDivElement>(null)
 
-  const addQuestion = (text: string) => {
-    if (!text.trim()) return
-    setQuestions(qs => [
-      ...qs,
-      { id: Date.now(), text: text.trim(), answered: false },
-    ])
+  const handleAdd = () => {
+    if (!draft.trim()) return
+    onAddQuestion(draft.trim())
+    setDraft('')
     
     if (questions.length > 2) {
-        // Scroll to bottom after adding question
-        setTimeout(() => {
+      // Scroll to bottom after adding question
+      setTimeout(() => {
         if (listRef.current) {
-            listRef.current.scrollTo({
+          listRef.current.scrollTo({
             top: listRef.current.scrollHeight,
             behavior: 'smooth',
-            })
+          })
         }
-        }, 300)
+      }, 300)
     }
   }
 
-  const deleteQuestion = (id: number) => {
-    setQuestions(qs => qs.filter(q => q.id !== id))
-  }
-
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-4`}>
       {/* add‑new form */}
       <div className="flex space-x-2">
         <input
           type="text"
           placeholder="New question for the patient…"
-          className="flex-1 p-2 border rounded border-default"
+          className="flex-1 p-2 border rounded border-default focus:outline-none focus:ring-2 focus:ring-primary/40"
           value={draft}
           onChange={e => setDraft(e.target.value)}
           onKeyDown={e => {
             if (e.key === 'Enter') {
-              addQuestion(draft)
-              setDraft('')
+              handleAdd()
             }
           }}
         />
         <button
           className="px-4 py-2 bg-primary text-white rounded"
-          onClick={() => {
-            addQuestion(draft)
-            setDraft('')
-          }}
+          onClick={handleAdd}
         >
           Add
         </button>
@@ -84,7 +70,8 @@ const Checklist: React.FC<ChecklistProps> = ({ className }) => {
             key={q.id}
             text={q.text}
             answered={q.answered}
-            onDelete={() => deleteQuestion(q.id)}
+            onDelete={() => onDeleteQuestion(q.id)}
+            onToggle={() => onToggleAnswer(q.id)}
           />
         ))}
       </div>
@@ -96,19 +83,24 @@ interface ChecklistItemProps {
   text: string
   answered: boolean
   onDelete: () => void
+  onToggle: () => void
 }
 
 const ChecklistItem: React.FC<ChecklistItemProps> = ({
   text,
   answered,
   onDelete,
+  onToggle
 }) => {
   const Icon = answered ? CheckCircle : XCircle
   const iconColor = answered ? 'text-green-500' : 'text-red-500'
 
   return (
-    <div className="group relative flex items-start space-x-3 p-3 bg-card rounded-lg border border-default hover:shadow-md">
-      <Icon className={`w-5 h-5 shrink-0 ${iconColor}`} />
+    <div 
+      className="group relative flex items-start space-x-3 p-3 bg-card rounded-lg border border-default hover:shadow-md"
+      onClick={onToggle}
+    >
+      <Icon className={`w-5 h-5 shrink-0 ${iconColor} cursor-pointer`} />
 
       <span className="flex-1 text-sm text-foreground whitespace-normal break-all pr-8">
         {text}
@@ -117,7 +109,10 @@ const ChecklistItem: React.FC<ChecklistItemProps> = ({
       {/* delete‑X on hover */}
       <X
         className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity"
-        onClick={onDelete}
+        onClick={(e) => {
+          e.stopPropagation()
+          onDelete()
+        }}
       />
     </div>
   )
