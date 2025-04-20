@@ -13,9 +13,7 @@ const Sidebar: React.FC = () => {
     return (
         <aside className="w-64 bg-card border-r border-default p-6 hidden lg:block">
             <h2 className="text-xl font-bold text-primary mb-6">
-                <Link href="/">
-                    AEGIS
-                </Link>
+                AEGIS
             </h2>
             <nav>
                 <ul className="space-y-4">

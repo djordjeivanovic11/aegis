@@ -7,6 +7,14 @@ interface CurrentPatientCardProps {
     patient: PatientInfo;
 }
 
+const DEFAULT_AVATARS = [
+    '/avatar1.png',
+    '/avatar2.png',
+    '/avatar3.png',
+    '/avatar4.png',
+    '/avatar5.png',
+];
+
 const calculateAge = (dob: string) => {
     const birthDate = new Date(dob);
     const diffMs = Date.now() - birthDate.getTime();
@@ -15,31 +23,59 @@ const calculateAge = (dob: string) => {
 };
 
 const CurrentPatientCard: React.FC<CurrentPatientCardProps> = ({ patient }) => {
-    const { id, fullName, dob, gender, email } = patient;
+    const { id, fullName, dob, gender, email, phone, imageUrl } = patient;
     const age = calculateAge(dob);
 
-    return (
-        <div className="w-full bg-card border border-border rounded-xl p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-primary mb-4">Current Patient</h2>
+    const pickDefaultAvatar = (id: string) => {
+        const hash = Array.from(id).reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+        return DEFAULT_AVATARS[hash % DEFAULT_AVATARS.length];
+    };
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6 text-base text-foreground">
-                <div>
-                    <span className="font-medium text-muted">Name:</span> {fullName}
+    const imgSrc = imageUrl || pickDefaultAvatar(id);
+
+    return (
+        <div className="w-full bg-card border border-default rounded-xl p-6 shadow-sm">
+            <div className="grid grid-cols-[auto_1fr_1fr] grid-rows-[auto_1fr] gap-x-12 gap-y-4">
+                {/* First Row */}
+                <div className="col-span-1"><h2 className="text-xl font-semibold text-primary text-center">Current Patient</h2></div>
+                <div className="col-span-1" />
+                <div className="col-span-1" />
+
+                {/* Second Row */}
+                <div className="flex justify-center">
+                    <div className="w-48 h-48 rounded-lg overflow-hidden">
+                        <img
+                            src={imgSrc}
+                            alt={`${fullName} avatar`}
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
                 </div>
-                <div>
-                    <span className="font-medium text-muted">Patient ID:</span> {id}
+
+                {/* Patient Details - Second Column */}
+                <div className="space-y-3 flex flex-col justify-center">
+                    <div>
+                        <span className="font-medium text-muted">Name:</span> {fullName}
+                    </div>
+                    <div>
+                        <span className="font-medium text-muted">Date of Birth:</span> {dob}
+                    </div>
+                    <div>
+                        <span className="font-medium text-muted">Age:</span> {age}
+                    </div>
                 </div>
-                <div>
-                    <span className="font-medium text-muted">Date of Birth:</span> {dob}
-                </div>
-                <div>
-                    <span className="font-medium text-muted">Age:</span> {age}
-                </div>
-                <div>
-                    <span className="font-medium text-muted">Gender:</span> {gender || '—'}
-                </div>
-                <div>
-                    <span className="font-medium text-muted">Email:</span> {email || '—'}
+
+                {/* Patient Details - Third Column */}
+                <div className="space-y-3 flex flex-col justify-center">
+                    <div>
+                        <span className="font-medium text-muted">Gender:</span> {gender || '—'}
+                    </div>
+                    <div>
+                        <span className="font-medium text-muted">Email:</span> {email || '—'}
+                    </div>
+                    <div>
+                        <span className="font-medium text-muted">Phone:</span> {phone || '—'}
+                    </div>
                 </div>
             </div>
         </div>
