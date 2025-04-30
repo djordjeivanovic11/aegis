@@ -4,7 +4,6 @@ import React from 'react';
 import { PatientInfo } from '@/types/patients/types';
 import PatientCard from '@/components/ui/agenda/PatientCard';
 
-// Dummy patient data
 export const dummyPatients: PatientInfo[] = [
     {
         id: 'a1f5c8e2-1234-4abc-8e2a-abcdef012345',

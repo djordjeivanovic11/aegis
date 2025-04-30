@@ -5,18 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d766ca57-622a-4503-986b-ff89aa6da819" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/services/transcript/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/types/transcript/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/ask/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/ask/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/ui/agenda/PatientList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/agenda/PatientList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/controls/RecorderControls.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/controls/RecorderControls.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/patients/CurrentPatientCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/patients/CurrentPatientCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/patients/patientChat/ChatPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/patients/patientChat/ChatPanel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/chat/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/chat/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/files/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/files/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +32,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;working__version&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -81,6 +71,7 @@
       <workItem from="1744987522818" duration="8561000" />
       <workItem from="1745069704642" duration="15292000" />
       <workItem from="1745112740627" duration="934000" />
+      <workItem from="1746043134961" duration="217000" />
     </task>
     <servers />
   </component>
